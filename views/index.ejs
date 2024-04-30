@@ -1,0 +1,52 @@
+<%- include('header.ejs') %>
+    <h2>쓰기페이지-----</h2>
+    <form action="/add" method="post">
+        <label>
+            <span>할 일 입력 : </span>
+            <input type="text" name="title" placeholder="할 일 입력" required>
+        </label>
+        <label>
+            종료예정일 :
+            <input type="date" name="dateOfGoal" required>
+        </label>
+        <label hidden> 작성일 : <input type="date" name="today"> </label>
+
+        <button class="submitBtn">등록</button>
+    </form>
+    <p class="alertMsg"></p>
+
+    <script>
+        const titleInput = document.querySelector('input[name="title"]')
+        const goalInput = document.querySelector('input[name="dateOfGoal"]')
+        const todayInput = document.querySelector('input[name="today"]')
+        const submitBtn = document.querySelector('.submitBtn');
+        const artMsg = document.querySelector('.alertMsg')
+
+        submitBtn.addEventListener('click', (e) => {
+            e.preventDefault() // 버튼을 누르면 form이 자동으로 작동되는데 그것을 막는 용도
+            let title = titleInput.value
+            let dateOfGoal = goalInput.value
+
+            // 날짜를 문자열로 받아오는데
+            // 비교를 하기 위해서는 날짜정보로 바꿔줄 필요가 있음
+            let today = new Date().toISOString().slice(0, 10)
+            // console.log(today);
+            todayInput.value = today
+
+            if (!title || !dateOfGoal) {
+                artMsg.innerHTML = '할 일과 종료일을 입력하세요!!!!'
+                return
+            }
+
+            // 날짜데이터로 바꾸기
+            // new Date(바꿀문자열)
+            if (new Date(dateOfGoal) < new Date(today)) {
+                artMsg.innerHTML = '목표일을 오늘 날짜 이후로 선택!!!!'
+                return
+            }
+
+            // 막아놓은 submit 실행
+            document.querySelector('form').submit()
+        })        
+    </script>
+    <%- include('footer.ejs') %>
